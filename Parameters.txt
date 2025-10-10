@@ -1,0 +1,15 @@
+
+#####################################################
+# Computing g(r)                                    #
+# Level 3 Computing, Durham University              #
+# Milestone problem                                 #
+#####################################################
+
+# Initialise simulation parameters
+
+L = 1.0                 # box size
+N = 100                 # number of particles
+eta = 0.72              # volume fraction
+rho = N/L**2            # number density
+sigma = 2*np.sqrt(eta/N/np.pi)   # particle diameter
+dr = sigma/20           # binning interval for the correlation function
