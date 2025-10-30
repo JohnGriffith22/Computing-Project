@@ -6,10 +6,10 @@
   "N": 100,
 
   // Packing fraction (2D area fraction η)
-  "eta": 0.68,
+  "eta": 0.3,
 
   // Particle diameter σ
-  "sigma": 0.3,
+  "L": 100,
 
   // Simulation dimensions: 2 = disks, 3 = spheres
   "dim": 2,
