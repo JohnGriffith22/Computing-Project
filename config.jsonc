@@ -1,0 +1,38 @@
+// parameters for Computing project
+
+
+{
+  // Number of particles
+  "N": 100,
+
+  // Packing fraction (2D area fraction η)
+  "eta": 0.68,
+
+  // Particle diameter σ
+  "sigma": 0.3,
+
+  // Simulation dimensions: 2 = disks, 3 = spheres
+  "dim": 2,
+
+  // Monte-Carlo steps
+  "equil_steps": 50000,
+  "prod_steps": 500000,
+
+  // Sampling frequency for g(r)
+  "sample_every": 1000,
+
+  // Step-size tuning frequency
+  "tune_every": 1000,
+
+  // Max distance for pair correlation (units of σ)
+  "r_max": 5.0,
+
+  // Radial histogram bins for g(r)
+  "gr_bins": 200,
+
+  // Initial arrangement: "hex" or "square"
+  "lattice": "square",
+
+  // RNG seed for reproducibility
+  "seed": 12345
+}

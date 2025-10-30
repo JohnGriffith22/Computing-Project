@@ -1,0 +1,160 @@
+Colloidal Fluids: Simulations of Hard
+Disks and Hard Spheres
+3.1 Background
+Soft matter physics is often characterised by the importance of entropy. This is exemplified by the so-called
+hard sphere model, consisting of impenetrable particles which otherwise do not interact. If the particles
+have a diameter σ, the interaction potential between two such particles i and j is given by
+Uij prij q 
+" 8 if rij σ
+0 if rij ¥ σ,
+where rij is the center-to-center distance between the particles. The potential energy of the system is
+therefore always zero without any overlap.
+Hard sphere model plays an important role in our understanding of liquids, as well as being one of the
+first ever systems to be studied carefully using computer simulations. It is worth mentioning here that
+understanding the structure of liquids is essential to understand the myriad phenomena that take place
+in the liquid state. Furthermore, despite its simple interaction potential, the hard sphere model proves to
+be anything but simple. It was generally believed prior to the 1950s that a fluid to solid phase transition
+must be due to attractive interactions between the molecules. Pioneering Monte Carlo simulations done
+at Los Alamos and Lawrence Livermore National Laboratories challenged this view by showing that hard
+spheres do have a fluid-solid phase transition. In fact, the phase transition is driven by entropy. This is a
+significant statement at that time, as it shows that the notion of ”entropy is disorder”, while adequate for
+many cases, is not always accurate.
+In this project we will look at Monte Carlo simulations using the hard sphere model. The milestone
+problem requires you to study a structural signature of the fluid to solid phase transition in two dimensions.
+The hard sphere model remains a topic of current scientific interests, and there are a number of avenues
+you can choose to extend the project.
+3.2 Monte Carlo Simulation
+The method of choice in this project is the so-called Monte Carlo simulation. In Monte Carlo, we estimate
+the properties of the system we are interested in by taking an average over the possible states, or in more
+13
+14 CHAPTER 3. COLLOIDAL FLUIDS: SIMULATIONS OF HARD DISKS AND HARD SPHERES
+technical terms, by taking an ensemble average. This is perhaps not the way many of us think about the
+average behaviour of a system. In experiments we usually take a series of measurements over a certain time
+interval and take an average of these measurements. In the world of computer simulations, this is precisely
+the idea behind Molecular Dynamics (and also several other methods), where the system is studied by
+computing the natural time evolution of the system numerically. The estimated properties of the system
+should be identical, either by taking time or ensemble averages, if the system is ergodic. Note that not all
+physical systems are ergodic. Such systems usually require special care to get reliable simulation results.
+Since the number of states in condensed matter systems is usually very large, it is impractical, if
+not impossible, to visit all possible states. This is where the concept of importance sampling becomes
+important in Monte Carlo. Firstly, if we run our simulation sufficiently long, it will have sampled the
+phase space adequately, even if not all states have been occupied during the simulation. Secondly, in the
+context of a classical system, the probability of a state to be occupied is proportional to its Boltzmann
+factor, exprU {kB T s (T. Gu´enault) where U is the total potential energy of the system. It therefore makes
+sense that we sample lower energy states more often, since they have higher probabilities to be occupied.
+But how does this work in practice?
+An algorithm which is used in most Monte Carlo simulations is due to Metropolis. Asssume you are
+initially in configuration I. In this algorithm, first generate a random perturbation to the system. Next,
+(i) accept the move if the energy of the new configuration J is lower, or (ii) accept the move with a
+probability exprpUI  UJ q{kB T s if UJ ¡ UI . In practise, this is done by generating a random number,
+rand, between 0 and 1. If rand exprpUI  UJ q{kB T s, the move is accepted. An important property
+of the Metropolis algorithm is that it satisfies detailed balance: at equilibrium, each elementary process
+should be equilibrated by its reverse process.
+There are a number of Monte Carlo moves available in the literature. For our problem, it is adequate
+to consider random Cartesian moves, where the change in the x-coordinate of particle i is given by
+∆xi  dpξ  0.5q,
+where ξ is a random number between 0 and 1, and d is the amplitude of the possible displacements. A
+similar formula can be written for the y and z coordinates of the particles. Usually you want to choose d
+such that 25  50% of the moves are accepted. Since we do not know this a priori, in practise d is regularly
+updated every NM C Monte Carlo steps. As a guide, larger step sizes tend to be rejected more often. On
+the other hand, small step sizes may have a higher chance to be accepted, but you have not moved very
+far in the phase space.
+In our hard sphere model, the potential energy of the system is zero when there is no overlap, and
+infinite if there is overlap. Thus, the accept/reject criterion is reduced to detecting any possible overlap
+in the configuration of the particles. Note that kinetic energy is not used in Monte Carlo (D. Frenkel and
+B. Smit) (Why is this?). It is also customary to apply periodic boundary conditions when investigating
+bulk properties using computer simulations. The simulation box is replicated in space such that when a
+particle leaves the cell from one side, under periodic boundary conditions, the particle will re-enter the cell
+from the opposite side.
+To analyse the configurations generated by the simulation, a particularly useful tool is the so-called
+pair-correlation function. Mathematically, it is defined as
+gprq  nprq
+nidealprq ,
+where nidealprq  ρ4πr2δr in three dimensions and ρ2πrδr in two dimensions, nprq is the number of particles
+within a shell δr at a distance r, and ρ is the number density of the system. Thus, gprq is the probability
+3.3. YOUR WORK PLAN 15
+relative to the ideal gas case of observing nprq particles at a distance r. For getting nprq reliably, you will
+have to generate many configurations of the particles and average over all those configurations. You also
+want to optimise the choice for δr. If δr is too small, your results will be very noisy. If it is too large, you
+will lose a lot of information.
+3.3 Your Work Plan
+3.3.1 Design Your Program
+Your first task is to design the program described below using pseudocode techniques. As well as an outline
+of the code structure you should include names and descriptions of any functions that you will need, any
+data that may require input from the user, internal data structures and the form of the output. You should
+make use of the numerical python library (numpy) as much as possible. For example numpy.random.rand
+can be used for generating random numbers, etc.
+You will need separate subroutines/functions which carry out the following tasks:
+ Generate starting configurations. The simplest option is to put the particles in a lattice (Hint: what
+lattice type do you expect to see when the system forms a crystal?). Alternatively, you can place
+the particles in a random configuration. Using this strategy, however, it may prove difficult to avoid
+overlaps between particles at high density.
+ Generate Monte Carlo moves. You can start by moving one particle per step, and increase (decrease)
+the amplitude d by 5% if the fraction of accepted moves after NM C  1000 steps is more than 50%
+(less than 25%).
+ Compute the energy of the system. In practise, you only need to compute the total energy once at
+the beginning of the simulation. It is a lot faster to track the change in energy associated to the
+Monte Carlo moves, rather than computing the total energy every single step. For the hard sphere
+model, this subroutine is reduced to detecting overlaps between the particles.
+ Accept/reject criterion according Metropolis algorithm. Due to the peculiarity of the hard sphere
+potential, the energy scale (and thus temperature) is irrelevant here, since the potential energy of
+the system is either zero or infinite (But it is important if you choose other potentials).
+ Compute the pair-correlation function. Make sure that you only make measurements after the system
+is properly equilibrated. A good starting point for δr is of order one-tenth of the particle radius.
+When computing the distance between two particles, make sure you take into account the periodic
+boundary condition.
+3.3.2 Solve the Milestone Problem
+Using the hard sphere model, you will now investigate the pair correlation function, gprq, as a function
+of the area/volume fraction, η, occupied by the particles. If L and N are respectively the size of your
+simulation box and the total number of particles, then η  N πσ2
+4L2 in two dimensions and η  N πσ3
+6L3 in three
+dimensions.
+For simplicity, let us focus here on two dimensions, and we shall use an ensemble where the total
+number of particles and the size of the simulation box are constants.
+16 CHAPTER 3. COLLOIDAL FLUIDS: SIMULATIONS OF HARD DISKS AND HARD SPHERES
+Initialise your code such that it contains 100 particles and the area fraction occupied by the particles
+is η  0.68. To remove the bias of your starting configuration, it is important that you equilibrate your
+system before taking any measurement. A typical equilibration run is of order 104  105 steps, though this
+can be system-dependent.
+After the system is properly equilibrated, run your Monte Carlo simulation for 5105 steps and sample
+the pair correlation function every 1000 steps. Compute and plot the average of the pair correlation function
+for r  0 . . . 5σ. You should observe that gprq  0 for r σ; it has its highest value at r  σ; and has
+several peaks, including at r{σ  0.19, 0.28, and 0.37.
+3.3.3 Extend Your Program
+You have a basic working program, but you should consider the following points before you start your
+research work:
+ How do you make sure that your simulation results have converged?
+ The fact that gpσq ¡ 1 suggests that there is an effective attractive interaction between the particles.
+How do you explain this observation?
+ Repeat the milestone analysis for η  0.69, 0.70, 0.71, 0.72. Compute and plot the average of the
+pair correlation function for r  0 . . . 5σ. You may need to sample gprq over a larger number of
+simulation steps with increasing η. Furthermore, you will observe the appearance of a new peak.
+This is a structural signature of the fluid to solid transition. Determine the area fraction where this
+phase transition occurs.
+3.3.4 Research With Your Program
+Now that you have a working code, there are several avenues to extend this project. Here I list several
+suggestions, but you are free to choose a different direction. You do not need to address all of these points.
+High marks will be given to reports that demonstrate your initiative. For a review and possible topics on
+colloidal hard spheres, see for instance Royall et al.
+ Dimensionality: Compare the simulation results for two and three dimensions. Do you expect to
+observe anything interesting in 1D?
+ Advanced Methods: (i) Study the same problem using NPT ensemble (constant number of parti-
+cles, pressure, temperature). A nice advanced calculation you can do then is to look for coexistence
+between the fluid and solid phases. (ii) Improve the efficiency of the simulation, e.g. by creating a
+neighbour list. This is particularly useful for high density.
+ New Interactions: (i) Investigate the difference between the hard sphere model described here to
+a Lennard-Jones potential, a very popular model in computational chemistry. (ii) Study the effect of
+shapes, e.g. rods. There are novel liquid crystalline phases simply due to the shapes of the molecules.
+ Mixture: Study binary hard spheres (or disks), where the two components have different diameters.
+You can investigate when phase separation occurs, and when the system is completely mixed.
+ Thermodynamics: Compute the pressure and/or free energy of the fluid and solid phases. Note:
+Computing the free energy of the solid phase is quite challenging.
+3.3. YOUR WORK PLAN 17
+3.3.5 References
+T. Gu´enault, Statistical Physics, Springer (2007); Durham University Library - available online.
+D. Frenkel and B. Smit, Understanding Molecular Simulation from Algorithms to Applications, Academic
+Press (2002); Durham University Library - available online.
+C.P. Royall, P. Charbonneau, M. Dijkstra, J. Russo, F. Smallenburg, T. Speck, C. Valeriani, Colloidal
+hard spheres: Triumphs, challenges, and mysteries, Rev. Mod. Phys., 96, 4, 2024; 10.1103/RevMod-
+Phys.96.045003
