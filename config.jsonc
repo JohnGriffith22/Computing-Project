@@ -6,7 +6,7 @@
   "N": 100,
 
   // Packing fraction (2D area fraction η)
-  "eta": 0.3,
+  "eta": 0.68,
 
   // Particle diameter σ
   "L": 100,
