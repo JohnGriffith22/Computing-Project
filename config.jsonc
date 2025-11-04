@@ -8,7 +8,7 @@
   // Packing fraction (2D area fraction η)
   "eta": 0.68,
 
-  // Particle diameter σ
+  // Domain Size L
   "L": 100,
 
   // Simulation dimensions: 2 = disks, 3 = spheres
