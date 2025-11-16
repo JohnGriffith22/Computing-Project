@@ -22,7 +22,7 @@
   "sample_every": 1000,
 
   // Step-size tuning frequency
-  "tune_every": 1000,
+  "tune_every": 100,
 
   // Max distance for pair correlation (units of σ)
   "r_max": 5.0,
