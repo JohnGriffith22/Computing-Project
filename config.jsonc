@@ -19,7 +19,7 @@
   "prod_steps": 500000,
 
   // Sampling frequency for g(r)
-  "sample_every": 1000,
+  "sample_every": 500,
 
   // Step-size tuning frequency
   "tune_every": 100,
@@ -28,7 +28,7 @@
   "r_max": 5.0,
 
   // Radial histogram bins for g(r)
-  "gr_bins": 200,
+  "gr_bins": 700,
 
   // Initial arrangement: "hex" or "square"
   "lattice": "square",
